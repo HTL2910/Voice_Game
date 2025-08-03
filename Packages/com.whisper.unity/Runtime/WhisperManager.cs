@@ -33,7 +33,7 @@ namespace Whisper
         [Header("Model")]
         [SerializeField] 
         [Tooltip("Path to model weights file")]
-        private string modelPath = "Whisper/ggml-small.en-q8_0.bin";
+        private string modelPath = "Whisper/ggml-tiny.bin";
         
         [SerializeField]
         [Tooltip("Determines whether the StreamingAssets folder should be prepended to the model path")]
@@ -160,13 +160,11 @@ namespace Whisper
         private async void Awake()
         {
             LogUtils.Level = logLevel;
-            if (availableModels.Count == 0)
-            {
-                availableModels.Add(new WhisperModelConfig { name = "ggml-tiny", modelPath = "Whisper/ggml-tiny.bin" });
-                availableModels.Add(new WhisperModelConfig { name = "ggml-small", modelPath = "Whisper/ggml-small.bin" });
-                availableModels.Add(new WhisperModelConfig { name = "ggml-small-q5_1", modelPath = "Whisper/ggml-small-q5_1.bin" });
-                availableModels.Add(new WhisperModelConfig { name = "ggml-small-q8_0", modelPath = "Whisper/ggml-small-q8_0.bin" });
-            }
+            // Chỉ sử dụng model ggml-tiny
+            availableModels.Clear();
+            availableModels.Add(new WhisperModelConfig { name = "ggml-tiny", modelPath = "Whisper/ggml-tiny.bin", isInStreamingAssets = true });
+            currentModelIndex = 0;
+            
             if (!initOnAwake)
                 return;
             await InitModel();
